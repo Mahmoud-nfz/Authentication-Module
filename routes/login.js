@@ -1,8 +1,10 @@
 const { Router } = require('express');
-const users = require("../users");
+// const users = require("../users");
 const getHashedPassword = require('../encryption/encryption').getHashedPassword ;
 const generateAuthToken = require('../encryption/encryption').generateAuthToken ;
-
+const sequelize = require('../dbconnection').sequelize ;
+const Sequelize = require('../dbconnection').Sequelize ;
+const User = require('../models/user')(sequelize, Sequelize.DataTypes);
 
 router = Router();
 
@@ -10,16 +12,20 @@ router = Router();
 
 const authTokens = {};
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body)
     const hashedPassword = getHashedPassword(password);
 
-    const user = users.find(u => {
-        return u.email === email && hashedPassword === u.password
-    });
+    const user = await User.findOne({where : {email : email}});
+
 
     if (user) {
+        if(user.dataValues.password !== hashedPassword){
+            res.status(401).send({
+                message: 'Invalid password',
+            });
+            return;
+        }
         const authToken = generateAuthToken();
 
         // Store authentication token
@@ -34,7 +40,7 @@ router.post('/', (req, res) => {
         })
     } else {
         res.status(401).send({
-            message: 'Invalid username or password',
+            message: 'Invalid email',
         });
     }
 });

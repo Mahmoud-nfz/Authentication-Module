@@ -1,11 +1,14 @@
 const { Router } = require('express');
-const users = require("../users");
+// const users = require("../users");
 const getHashedPassword = require('../encryption/encryption').getHashedPassword ;
+const sequelize = require('../dbconnection').sequelize ;
+const Sequelize = require('../dbconnection').Sequelize ;
+const User = require('../models/user')(sequelize, Sequelize.DataTypes);
 
 router = Router();
 
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { email, firstName, lastName, password, confirmPassword } = req.body;
 
     console.log(req.body)
@@ -14,7 +17,7 @@ router.post('/', (req, res) => {
     if (password === confirmPassword) {
 
         // Check if user with the same email is also registered
-        if (users.find(user => user.email === email)) {
+        if (await User.findOne({where : {email : email}})) {
 
             res.status(409).send({
                 message: 'User already registered.',
@@ -26,7 +29,7 @@ router.post('/', (req, res) => {
         const hashedPassword = getHashedPassword(password);
 
         // Store user into the database if you are using one
-        users.push({
+        User.create({
             firstName,
             lastName,
             email,

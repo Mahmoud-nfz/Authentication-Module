@@ -1,7 +1,7 @@
 const express = require('express') ;
 const cors = require('cors');
 const app = express();
-const PORT = 8000 ;
+const PORT = 8001 ;
 
 // const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
@@ -75,19 +75,15 @@ app.get('/', function(req, res){
 //     res.render('protected');
 // });
 
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('authentication','root','', {
-   // The `host` parameter is required for other databases
-   host: 'localhost',
-   dialect: 'mysql',
- });
+
+const sequelize = require('./dbconnection').sequelize ;
+const Sequelize = require('./dbconnection').Sequelize ;
 
 const temp = require('./models/user')(sequelize, Sequelize.DataTypes);
 
 const a = async () => {
-   const qqq = await temp.findAll() ;
+   const qqq = await temp.findOne({where : {email : 'R7ell5cH'}})
    console.log(qqq);
-
 }
 a()
 
