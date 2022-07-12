@@ -1,7 +1,7 @@
 const express = require('express') ;
 const cors = require('cors');
 const app = express();
-const PORT = 8004 ;
+const PORT = 8000 ;
 
 // const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const users = require('./users');
 
 
-/* importing routes */
+/* importing routes */ 
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
 /* \importing routes*/
@@ -75,6 +75,20 @@ app.get('/', function(req, res){
 //     res.render('protected');
 // });
 
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('authentication','root','', {
+   // The `host` parameter is required for other databases
+   host: 'localhost',
+   dialect: 'mysql',
+ });
 
+const temp = require('./models/user')(sequelize, Sequelize.DataTypes);
+
+const a = async () => {
+   const qqq = await temp.findAll() ;
+   console.log(qqq);
+
+}
+a()
 
 app.listen(PORT,()=> console.log(`listening on ${PORT}`));
