@@ -8,6 +8,8 @@ router = Router();
 router.post('/', (req, res) => {
     const { email, firstName, lastName, password, confirmPassword } = req.body;
 
+    console.log(req.body)
+
     // Check if the password and confirm password fields match
     if (password === confirmPassword) {
 

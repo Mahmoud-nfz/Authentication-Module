@@ -12,6 +12,7 @@ const authTokens = {};
 
 router.post('/', (req, res) => {
     const { email, password } = req.body;
+    console.log(req.body)
     const hashedPassword = getHashedPassword(password);
 
     const user = users.find(u => {
@@ -32,7 +33,7 @@ router.post('/', (req, res) => {
             message : "Succesfully logged in as "+email ,
         })
     } else {
-        res.status(400).send({
+        res.status(401).send({
             message: 'Invalid username or password',
         });
     }
