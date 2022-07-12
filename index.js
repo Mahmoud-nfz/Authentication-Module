@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 /* importing routes */ 
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
+const testAuthToken = require('./routes/TestAuthToken');
 /* \importing routes*/
 
 /* Middlewares */
@@ -41,10 +42,7 @@ app.use(bodyParser.json());
 /* mapping routes */
 app.use('/register',registerRoute);
 app.use('/login',loginRoute);
-app.use('/list',(req,res)=>{
-    // console.log(users) ;
-    res.status(200).send({'users' : users}) ;
-})
+app.use('/test',testAuthToken);
 
 app.get('/', function(req, res){
     if(req.session.page_views){

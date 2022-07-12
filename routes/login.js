@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
         token = jwt.sign(
             { userId: user.id, email: user.email },
             "secretkeyappearshere",
-            { expiresIn: "1h" }
+            // { expiresIn: "1h" }
         );
         res
         .status(200)
